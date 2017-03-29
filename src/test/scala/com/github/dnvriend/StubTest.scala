@@ -43,6 +43,7 @@ class StubTest extends TestSpec with MockFactory {
     client.getPersonById _ when "222" returns Future.successful(Option(Person.Empty))
     client.getPersonById _ when "333" returns Future.successful(None)
     client.getPersonById _ when "-1" returns Future.failed(new RuntimeException("mocked"))
+    client.getPersonById _ when * returns Future.successful(Option(Person("anything", "anything", 42)))
     f(client)
   }
 
@@ -50,5 +51,6 @@ class StubTest extends TestSpec with MockFactory {
     service.getPersonById("222").futureValue.value shouldBe Person.Empty
     service.getPersonById("333").futureValue should not be 'defined
     service.getPersonById("-1").toTry should be a 'failure
+    service.getPersonById("42").futureValue.value shouldBe Person("anything", "anything", 42)
   }
 }
